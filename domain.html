@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#b { width:280px; padding:15px; margin-bottom:15px; border:2px solid #fe8e14; cursor:pointer;}
+#c { margin-bottom:20px;}
+</style>
+</head>
+
+<body>
+<div id="c">我是 parent 页面里的内容</div>
+<div id="b">点击这里获取 iframe 页面的内容</div>
+<iframe id="iframe" src="http://192.168.8.89:86/kuayu/domain.html"></iframe>
+<script type="text/javascript">
+	document.domain = '192.168.8.89';
+
+	var iframe = document.getElementById('iframe');
+	var win = iframe.contentWindow;
+
+	document.getElementById('b').onclick = function(){
+		document.getElementById('b').innerHTML = win.document.getElementById('a').innerHTML
+	}
+</script>
+</body>
+</html>

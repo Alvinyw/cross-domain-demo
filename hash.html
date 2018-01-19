@@ -1,0 +1,38 @@
+hash<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../js/jquery1.11.1.js"></script>
+<title>无标题文档</title>
+<style>
+li { cursor:pointer;}
+#b { margin-top:20px;}
+</style>
+</head>
+
+<body>
+<ul>
+    <li>Click to send the first message</li>
+    <li>Click to send the second message</li>
+    <li>Click to send the thrid message</li>
+</ul>
+<iframe id="myIFrame" src="http://alvinwp.com/demo/kuayu/hash.html"></iframe>
+<div id="b">接受 iframe 页面发送的消息</div>
+<script>
+//点击发送消息
+$("li").each(function(index, element) {
+	var _this = $(this);
+    _this.click(function(){
+		document.getElementById('myIFrame').src = 'http://alvinwp.com/demo/kuayu/hash.html' + '#' + _this.html();
+	});
+});
+
+//监听 hash 变化
+window.onhashchange = checkMessage;
+function checkMessage() {
+  var message = window.location.hash;
+  $("#b").html(message);
+}
+</script>
+</body>
+</html>

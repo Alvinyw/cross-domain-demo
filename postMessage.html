@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+input { margin-top: 30px; }
+#c { margin:10px 0 30px; padding:10px; width:300px; margin-top:15px; border:2px solid #fe8e14; font-weight:bold; color:#444;}
+</style>
+</head>
+
+<body>
+<div id="a">我是主页面</div>
+<div id="c">iframe 内嵌页面返回的信息会显示在这里</div>
+<iframe id="childPage" src="http://alvinwp.com/demo/kuayu/postMessage.html"></iframe>
+<br/>
+<input id="btnSubmit" onclick="sendData()" type="button" value="给 iframe 页面发送文本：hello world!"/>
+<script>
+//发消息
+function sendData(){
+
+    var ifr = document.getElementById('childPage');  
+
+    var targetOrigin = "http://alvinwp.com";  
+
+    ifr.contentWindow.postMessage('hello world!', targetOrigin);  
+
+};
+
+//收消息
+var onmessage = function (event) {  
+  var data = event.data;//消息内容  
+  var origin = event.origin;//消息来源地址  
+  var source = event.source;//源 Window 对象
+  if(origin=="http://alvinwp.com"){  
+	document.getElementById("c").innerHTML = data;
+  }  
+
+};  
+
+if (typeof window.addEventListener != 'undefined') { 
+
+  window.addEventListener('message', onmessage, false);  
+  
+} else if (typeof window.attachEvent != 'undefined') { 
+ 
+  //for ie 
+  window.attachEvent('onmessage', onmessage);  
+  
+}  
+</script>
+</body>
+</html>
