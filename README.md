@@ -240,22 +240,112 @@ if (typeof window.addEventListener != 'undefined') {
 
 ## 六、jsonp
 
-**原理：&lt; script> 和 &lt; img> 等带有 src 属性的元素可以跨域获取资源。**
+**原理：&lt;script> 和 &lt;img> 等带有 src 属性的元素可以跨域获取资源。**
 
 [JSONP](https://baike.baidu.com/item/jsonp/493658?fr=aladdin)(JSON with Padding)是 JSON 的一种"使用模式"，可用于解决主流浏览器的跨域数据访问的问题。
 
+网页通过添加一个 &lt;script> 元素，向服务器请求 [JSON](https://baike.baidu.com/item/JSON/2462549?fr=aladdin) 数据，这种做法不受同源政策限制；利用 &lt;script> 元素的这个开放策略，网页可以得到从其他来源动态产生的 JSON 资料，而这种使用模式就是所谓的 JSONP。用 JSONP 抓到的资料并不是 JSON，而是任意的能执行的 JavaScript，用 JavaScript 直译器执行而不是用 JSON 解析器解析。
 
-- **iframe.html**
+上面说的这几种都是双向通信的，即两个 iframe，页面与 iframe 或是页面与页面之间的，下面说几种单项跨域的（一般用来获取数据），因为通过 script 标签引入的 js 是不受同源策略的限制的。所以我们可以通过 script 标签引入一个 js 或者是一个其他后缀形式（如 php，jsp 等）的文件，**此文件返回一个 js 函数的调用**。
 
-```html
-
-```
-
-- **iframe.html**
+- **http://localhost/JSONP.html**
 
 ```html
-
+<ul>
+    <li>Name: <span id="a"></span></li>
+    <li>Age: <span id="b"></span></li>
+    <li>Weight: <span id="c"></span></li>
+</ul>
+<script type="text/javascript">
+    function dosomething(jsondata){
+    	document.getElementById('a').innerHTML = jsondata.Nmae;
+		document.getElementById('b').innerHTML = jsondata.Age;
+		document.getElementById('c').innerHTML = jsondata.Weight;
+    }
+</script> 
+<script src="https://alvinyw.github.io/Blog/crossDomain/jsonp.json?callback=dosomething"></script>
 ```
+
+- **https://alvinyw.github.io/Blog/crossDomain/jsonp.json**
+
+```javascript
+fun 
+dosomething(
+{
+  "Nmae": "Alvin",
+  "Age": "xx",
+  "Weight": "8.8.8.8"
+}
+);
+```
+
+- **https://alvinyw.github.io/Blog/crossDomain/jsonp.php**
+
+```php
+<?php
+
+$callback = $_GET['callback'];//得到回调函数名
+
+$data = '{
+  "Nmae": "Alvin",
+  "Age": "xx",
+  "Weight": "8.8.8.8"
+}';//要返回的数据
+
+echo $callback.'('.json_encode($data).')';//输出
+
+?>
+```
+### JSONP 的优缺点: 
+1. JSONP 的优点是：它不像 XMLHttpRequest 对象实现的 Ajax 请求那样受到同源策略的限制；它的兼容性更好，在更加古老的浏览器中都可以运行，不需要 XMLHttpRequest 或 ActiveX 的支持；并且在请求完毕后可以通过调用 callback 的方式回传结果。
+2. JSONP 的缺点则是：它只支持 GET 请求而不支持 POST 等其它类型的 HTTP 请求；它只支持跨域 HTTP 请求这种情况，不能解决不同域的两个页面之间如何进行 JavaScript 调用的问题。
+
+## 七、jsonp
+
+CORS（Cross-Origin Resource Sharing）跨域资源共享，定义了必须在访问跨域资源时，浏览器与服务器应该如何沟通。**CORS 背后的基本思想就是使用自定义的 HTTP 头部让浏览器与服务器进行沟通，从而决定请求或响应是应该成功还是失败**。目前，所有浏览器都支持该功能，IE 浏览器不能低于 IE10。整个 CORS 通信过程，都是浏览器自动完成，不需要用户参与。
+
+对于开发者来说，CORS 通信与同源的 AJAX 通信没有差别，代码完全一样。浏览器一旦发现 AJAX 请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。
+
+因此，实现 CORS 通信的关键是服务器。只要服务器实现了 CORS 接口，就可以跨源通信。
+
+需要设置的几个 HTTP 头信息如下：
+
+```html
+Access-Control-Allow-Origin: http://alvinwp.com
+Access-Control-Allow-Methods: GET, POST, PUT
+Access-Control-Allow-Headers: X-Custom-Header
+```
+
+服务器的设置可参考如下代码：
+```html
+location / {
+     if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+        add_header 'Access-Control-Max-Age' 1728000;
+        add_header 'Content-Type' 'text/plain charset=UTF-8';
+        add_header 'Content-Length' 0;
+        return 204;
+     }
+ 
+     if ($request_method = 'POST') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+     }
+ 
+     if ($request_method = 'GET') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+     }
+}
+```
+### CORS 和 JSONP 对比:
+1. JSONP 只能实现 GET 请求，而 CORS 支持所有类型的 HTTP 请求。
+2. 使用 CORS，开发者可以使用普通的 XMLHttpRequest 发起请求和获得数据，比起 JSONP 有更好的错误处理。
+3. JSONP 主要被老的浏览器支持，它们往往不支持 CORS，而绝大多数现代浏览器都已经支持了 CORS）。
 
 ## 了解更多跨域知识
 
