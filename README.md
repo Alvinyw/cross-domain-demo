@@ -269,7 +269,6 @@ if (typeof window.addEventListener != 'undefined') {
 - **https://alvinyw.github.io/Blog/crossDomain/jsonp.json**
 
 ```javascript
-fun 
 dosomething(
 {
   "Nmae": "Alvin",
