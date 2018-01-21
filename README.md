@@ -10,8 +10,8 @@
 <iframe id="iframe" src="http://localhost/iframe2.html"></iframe>
 <script type="text/javascript">
    document.getElementById('b').onclick = function(){
-        var iframeWin = document.getElementById('iframe').contentWindow;
-		document.getElementById('b').innerHTML = iframeWin.document.getElementById('a').innerHTML;        
+	var iframeWin = document.getElementById('iframe').contentWindow;
+	document.getElementById('b').innerHTML = iframeWin.document.getElementById('a').innerHTML;        
     }
 </script>
 ```
@@ -211,7 +211,7 @@ if (typeof window.addEventListener != 'undefined') {
 2. **message:** 是要发送的消息，类型为 String、Object (IE8、9 不支持);
 3. **targetOrigin:** 是限定消息接收范围，不限制请使用 “*”。
 
-> 仅高级浏览器 Internet Explorer 8+, chrome，Firefox , Opera 和 Safari 支持这个功能。
+> 缺点：仅高级浏览器 Internet Explorer 8+, chrome，Firefox , Opera 和 Safari 支持这个功能。
 
 ## 五、window.name
 
@@ -300,7 +300,7 @@ echo $callback.'('.json_encode($data).')';//输出
 1. JSONP 的优点是：它不像 XMLHttpRequest 对象实现的 Ajax 请求那样受到同源策略的限制；它的兼容性更好，在更加古老的浏览器中都可以运行，不需要 XMLHttpRequest 或 ActiveX 的支持；并且在请求完毕后可以通过调用 callback 的方式回传结果。
 2. JSONP 的缺点则是：它只支持 GET 请求而不支持 POST 等其它类型的 HTTP 请求；它只支持跨域 HTTP 请求这种情况，不能解决不同域的两个页面之间如何进行 JavaScript 调用的问题。
 
-## 七、jsonp
+## 七、CORS
 
 CORS（Cross-Origin Resource Sharing）跨域资源共享，定义了必须在访问跨域资源时，浏览器与服务器应该如何沟通。**CORS 背后的基本思想就是使用自定义的 HTTP 头部让浏览器与服务器进行沟通，从而决定请求或响应是应该成功还是失败**。目前，所有浏览器都支持该功能，IE 浏览器不能低于 IE10。整个 CORS 通信过程，都是浏览器自动完成，不需要用户参与。
 
@@ -347,8 +347,8 @@ location / {
 2. 使用 CORS，开发者可以使用普通的 XMLHttpRequest 发起请求和获得数据，比起 JSONP 有更好的错误处理。
 3. JSONP 主要被老的浏览器支持，它们往往不支持 CORS，而绝大多数现代浏览器都已经支持了 CORS）。
 
-## 了解更多跨域知识
+## 八、了解更多跨域知识
 
-[跨域知识总结-前端]（http://alvinwp.com/seo/1848）
+[跨域知识总结-前端](http://alvinwp.com/seo/1848)
 
 
